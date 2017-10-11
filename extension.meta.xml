@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension id="stripe_payments" status="released" xmlns="http://getsymphony.com/schemas/extension/1.0">
+	<name>Stripe Payments</name>
+	<description>Stripe Payments and Transaction Logging</description>
+	<repo type="github">https://github.com/nimanthaharshana/git-test-repo</repo>
+	<url type="discuss">http://getsymphony.com/discuss/thread/32795/</url>
+	<types>
+		<type>Multimedia</type>
+		<type>Image</type>
+		<type>Thumbnail</type>
+	</types>
+	<authors>
+		<author>
+			<name github="nimanthaharshana" symphony="nimanthaharshana">Nimantha Perera</name>
+			<website>http://getsymphony.com</website>
+		</author>
+	</authors>
+	<releases>
+		<release version="1.00" date="2017-09-26" min="2.7.0" max="2.x.x">
+			- Initial Release
+		</release>
+	</releases>
+</extension>

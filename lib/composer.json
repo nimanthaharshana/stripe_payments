@@ -1,0 +1,13 @@
+{
+	"authors": [
+		{
+			"name": "Nimantha Perera",
+			"email": "nimantha@eyes-down.net",
+			"homepage": "http://www.eyes-down.net",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"stripe/stripe-php": "^5.2"
+	}
+}

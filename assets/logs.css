@@ -1,0 +1,21 @@
+tr.denied td {
+	background: #fcc 
+}
+
+tr.denied td,
+tr.denied td a {
+	color: #600 
+}
+
+tr.selected td,
+tr.selected td a { 
+	color: #fff
+}
+
+td.succeeded {
+    background-color: aquamarine !important;
+}
+
+td.failed {
+    background-color: tomato !important;
+}
