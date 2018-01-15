@@ -21,6 +21,7 @@ Final Class eventStripe_payments extends Event {
 		parent::__construct();
 		$this->_driver = Symphony::ExtensionManager()->create('stripe_payments');
 		self::$allowed_params = array(
+			"transaction_id" => "",
 			"amount" => "",
 			"currency" => "",
 			"description" => "",
@@ -48,34 +49,60 @@ Final Class eventStripe_payments extends Event {
 			$currency = $_POST['currency'];
 			$description = $_POST["charge_description"];
 			$email = $_POST["stripeEmail"];
+//			$email = "failed";
 
 			$fields = $_POST['fields'];
+			$hidden_fields = $_POST['hfields'];
 			$sections = $_POST['sections'];
+
+//			echo '<pre>';
+//			var_dump($fields);
+//			echo '</pre>';
+//			die();
 
 			$today = date("Y-m-d");
 
 			try {
 
-				// Set the token
-				$token = $_POST['stripeToken'];
+				if ($amount > 0) {
+					// Set the token
+					$token = $_POST['stripeToken'];
 
-				// Set your secret key
-				\Stripe\Stripe::setApiKey($sk);
 
-				// Charge the user's card:
-				$charge = \Stripe\Charge::create(array(
-							"amount" => $amount,
-							"currency" => $currency,
-							"description" => $description,
-							"source" => $token
-				));
 
-				self::$allowed_params["amount"] = $charge->amount;
-				self::$allowed_params["currency"] = $currency;
-				self::$allowed_params["description"] = $description;
-				self::$allowed_params["status"] = $charge->status;
-				self::$allowed_params["paid"] = $charge->paid;
 
+
+
+
+
+
+
+
+					// Set your secret key
+					\Stripe\Stripe::setApiKey($sk);
+
+
+
+
+
+
+					// Charge the user's card:
+					$charge = \Stripe\Charge::create(array(
+								"amount" => $amount,
+								"currency" => $currency,
+								"description" => $description,
+								"source" => $token
+					));
+
+//				echo "<pre>";
+//				var_dump($charge->source);
+//				echo("</pre>");
+//				die();
+//				self::$allowed_params["amount"] = number_format(floatval($charge->amount / 100), 2);
+//				self::$allowed_params["currency"] = $currency;
+//				self::$allowed_params["description"] = $description;
+//				self::$allowed_params["status"] = $charge->status;
+//				self::$allowed_params["paid"] = $charge->paid;
 //				$allowed_params = array(
 //					"amount" => $charge->amount,
 //					"currency" => $currency,
@@ -84,23 +111,49 @@ Final Class eventStripe_payments extends Event {
 //					"paid" => $charge->paid
 //				);
 
-				if ($charge->paid) {
+					$post_hidden_fields = new XMLElement('hidden_fields');
+					if ($hidden_fields) {
+						foreach ($hidden_fields as $key => $val) {
+							$post_hidden_fields->appendChild(new XMLElement("$key", $val));
+						}
+					}
+					$output->appendChild($post_hidden_fields);
 
-					$output->setAttribute('result', 'success');
-					$output->appendChild(new XMLElement("amount", $charge->amount));
-					$output->appendChild(new XMLElement("message", $charge->status));
-				} else {
-					$output->setAttribute('result', 'error');
-					$output->appendChild(new XMLElement("message", $charge->status));
+					if ($charge->paid) {
+
+						$output->setAttribute('result', 'success');
+						$output->appendChild(new XMLElement("amount", $charge->amount));
+						$output->appendChild(new XMLElement("message", $charge->status));
+						self::$allowed_params["transaction_id"] = $charge->id;
+						self::$allowed_params["customer"] = $charge->source["name"];
+						self::$allowed_params["amount"] = number_format(floatval($charge->amount / 100), 2);
+						self::$allowed_params["currency"] = $currency;
+						self::$allowed_params["description"] = $description;
+						self::$allowed_params["status"] = $charge->status;
+						self::$allowed_params["paid"] = $charge->paid;
+					} else {
+						$output->setAttribute('result', 'error');
+						$output->appendChild(new XMLElement("message", $charge->status));
+
+						self::$allowed_params["transaction_id"] = 0;
+						self::$allowed_params["customer"] = $email;
+						self::$allowed_params["amount"] = $amount;
+						self::$allowed_params["currency"] = $currency;
+						self::$allowed_params["description"] = $description;
+						self::$allowed_params["status"] = "failed";
+						self::$allowed_params["paid"] = 0;
+					}
+
+					$log = array(
+						"transaction_id" => self::$allowed_params["transaction_id"],
+						"description" => self::$allowed_params["description"],
+						"customer" => $charge->source["name"],
+						"payment_date" => $today,
+						"amount" => self::$allowed_params["amount"],
+						"paid" => self::$allowed_params["paid"],
+						"status" => self::$allowed_params["status"]
+					);
 				}
-
-				$log = array(
-					"customer" => $charge->source["name"],
-					"payment_date" => $today,
-					"amount" => $charge->amount,
-					"paid" => $charge->paid,
-					"status" => $charge->status
-				);
 
 				$entryManager = new EntryManager(Symphony::Engine());
 
@@ -108,9 +161,14 @@ Final Class eventStripe_payments extends Event {
 
 				if ($fields) {
 
+					$post_fields = new XMLElement('post-fields');
+
 					foreach ($fields as $section_id => $section_vals) {
 						foreach ($section_vals as $entry_id => $entry_vals) {
 							foreach ($entry_vals as $entry_handle => $entry_val) {
+
+								$post_fields->appendChild(new XMLElement("$entry_handle", $entry_val));
+
 								$fields = Symphony::Database()->fetch("
 						SELECT `id`, `label` FROM `tbl_fields` WHERE `element_name` = '$entry_handle' AND `parent_section` = '$section_id'
 					");
@@ -119,53 +177,102 @@ Final Class eventStripe_payments extends Event {
 								$entry = $entries[0];
 								$field = $fields[0];
 
+								$field_type = FieldManager::fetchFieldTypeFromID($field['id']);
+
 //							echo '<pre>';
 //							var_dump($field);
 //							var_dump($entry_val);
 //							echo '</pre>';
 //
 //							die();
+//								echo '<pre>';
+//								var_dump($entry);
+//								var_dump($field);
+//								echo '</pre>';
 
 								$value = array_key_exists($entry_val, self::$allowed_params) ? self::$allowed_params[$entry_val] : $entry_val;
 
-								$entry->setData($field['id'], array(
-									'handle' => Lang::createHandle($value),
-									'value' => $value
-										)
-								);
 
-								$entry->commit();
+
+
+
+
+
+
+								$cols = $this->_get_cols($field_type, $value);
+
+//								echo '<pre>';
+//								var_dump($cols);
+//								echo '</pre>';
+
+								$entry->setData($field['id'], $cols);
+
+//								$entry->setData($field['id'], array(
+//									'handle' => Lang::createHandle($value),
+//									'value' => $value
+//										)
+//								);
+
+								$status = $entry->commit();
+//								echo '<pre>';
+//								var_dump($entry);
+//								var_dump($field);
+//								echo '</pre>';
 							}
 						}
 					}
+
+					$output->appendChild($post_fields);
 				}
 
 				if ($sections) {
 
+					$entries = new XMLElement("entries");
+					$entries->setAttribute('group', 'new');
+
 					foreach ($sections as $source => $data) {
 
 						foreach ($data as $field_handle => $value) {
+//							if ($value == "amount") {
+//								self::$allowed_params[$value] = self::$allowed_params[$value] / 100;
+//							}
 							$data[$field_handle] = array_key_exists($value, self::$allowed_params) ? self::$allowed_params[$value] : $value;
 						}
 
 						$entry = EntryManager::create();
+//						$new_entry_id = $entry->assignEntryId();
+//						$data["id"] = $new_entry_id;
 						$entry->set('section_id', $source);
 						$entry->setDataFromPost($data);
 
 						$status = $entry->commit();
+
+//						echo '<pre>';
+//						var_dump($entry->get("id"));
+//						echo '</pre>';
+//						die();
+
+						$new_entry = new XMLElement("entry");
+						$new_entry->setAttribute('id', $entry->get("id"));
+						$new_entry->setAttribute('section', $source);
+
+						$entries->appendChild($new_entry);
 					}
+					$output->appendChild($entries);
 				}
 
 				Symphony::Database()->insert($log, 'tbl_stripepayments_logs');
 			} catch (Exception $ex) {
 				$log = array(
+					"transaction_id" => 0,
+					"description" => $description,
 					"customer" => $email,
 					"payment_date" => $today,
-					"amount" => $amount,
+					"amount" => number_format(floatval($amount / 100), 2),
 					"paid" => 0,
 					"status" => "failed"
 				);
-				$output->setAttribute('result', 'error');
+				$output->setAttribute('result', 'system-error');
 				$output->appendChild(new XMLElement("message", $ex->getMessage()));
 				Symphony::Database()->insert($log, 'tbl_stripepayments_logs');
 			}
@@ -186,6 +293,23 @@ Final Class eventStripe_payments extends Event {
 
 			return $output;
 		}
+	}
+
+	private function _get_cols($type, $value) {
+
+		$cols = array();
+
+		switch ($type) {
+			case "input":
+				$cols["handle"] = Lang::createHandle($value);
+				$cols["value"] = $value;
+				break;
+			case "date":
+				$cols["date"] = date("Y-m-d h:i:s", strtotime($value));
+				$cols["value"] = date(DATE_ISO8601, strtotime($value));
+				break;
+		}
+		return $cols;
 	}
 
 	public static function documentation() {

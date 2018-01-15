@@ -54,6 +54,8 @@ class contentExtensionStripe_paymentsLogs extends AdministrationPage {
 
 		$th = array(
 			array('Id', 'col'),
+			array('Transaction ID', 'col'),
+			array('Payment Description', 'col'),
 			array('Customer E-mail', 'col'),
 			array('Payment Date', 'col'),
 			array('Amount Paid', 'col'),
@@ -92,6 +94,16 @@ class contentExtensionStripe_paymentsLogs extends AdministrationPage {
 				$col[] = Widget::TableData(General::sanitize($log_id));
 //				}
 				$col[0]->appendChild(Widget::Input("items[{$log_id}]", NULL, 'checkbox'));
+
+				if (!empty($log_transaction_id))
+					$col[] = Widget::TableData(General::sanitize($log_transaction_id));
+				else
+					$col[] = Widget::TableData('None', 'inactive');
+
+				if (!empty($log_description))
+					$col[] = Widget::TableData(General::sanitize($log_description));
+				else
+					$col[] = Widget::TableData('None', 'inactive');
 
 				if (!empty($log_customer))
 					$col[] = Widget::TableData(General::sanitize($log_customer));

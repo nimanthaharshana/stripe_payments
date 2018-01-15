@@ -182,7 +182,7 @@ Class extension_Stripe_Payments extends Extension {
 				FROM
 					`tbl_stripepayments_logs` AS l
 				ORDER BY
-					l.payment_date DESC
+					l.id DESC
 				LIMIT {$start}, {$per_page}
 			");
 	}
@@ -194,7 +194,7 @@ Class extension_Stripe_Payments extends Extension {
 				FROM
 					`tbl_stripepayments_logs` AS l
 				ORDER BY
-					l.payment_date DESC
+					l.id DESC
 			");
 	}
 
