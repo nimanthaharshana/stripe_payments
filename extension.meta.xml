@@ -3,7 +3,7 @@
 	<name>Stripe Payments</name>
 	<description>Stripe Payments and Transaction Logging</description>
 	<repo type="github">https://github.com/nimanthaharshana/stripe_payments</repo>
-	<url type="discuss">http://getsymphony.com/discuss/thread/32795/</url>
+	<!--<url type="discuss">http://getsymphony.com/discuss/thread/32795/</url>-->
 	<types>
 		<type>Event</type>
 		<type>Third Party Integration</type>
@@ -11,11 +11,11 @@
 	<authors>
 		<author>
 			<name github="nimanthaharshana" symphony="nimanthaharshana">Nimantha Perera</name>
-			<website>http://getsymphony.com</website>
+			<website>https://www.eyes-down.net/</website>
 		</author>
 		<author>
 			<name github="stuartgpalmer" symphony="stuartgpalmer">Stuart Palmer</name>
-			<website>http://getsymphony.com</website>
+			<website>https://www.eyes-down.net/</website>
 		</author>
 	</authors>
 	<releases>
