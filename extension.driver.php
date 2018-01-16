@@ -52,20 +52,12 @@ Class extension_Stripe_Payments extends Extension {
 	}
 
 	public function process_event_data($context) {
-//		var_dump(in_array('stripe-payments', $context['event']->eParamFILTERS));
-//		die();
 		if (!in_array('stripe-payments', $context['event']->eParamFILTERS)) {
 			return;
 		}
-//		var_dump($_POST);
-//		die("OK");
 	}
 
 	public function check_stripe_preferences(&$context) {
-//		var_dump(in_array('stripe-payments', $context['event']->eParamFILTERS));
-//		die();
-//		var_dump($_POST);
-//		die("OK");
 		if (!in_array('stripe-payments', $context['event']->eParamFILTERS)) {
 			return;
 		}
@@ -81,11 +73,13 @@ Class extension_Stripe_Payments extends Extension {
 		try {
 			Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_stripepayments_logs` (
                                     `id` int(11) NOT NULL auto_increment,
-                                    `customer` varchar(255) NOT NULL,
-									`payment_date` date NOT NULL,
-                                    `amount` varchar(255) NOT NULL,
-                                    `paid` tinyint(1) NOT NULL,
-                                    `status` varchar(255) NOT NULL,
+									`transaction_id` varchar(255) DEFAULT NULL,
+									`description` varchar(255) DEFAULT NULL,
+                                    `customer` varchar(255) DEFAULT NULL,
+									`payment_date` date DEFAULT NULL,
+                                    `amount` varchar(255) DEFAULT NULL,
+                                    `paid` tinyint(1) DEFAULT NULL,
+                                    `status` varchar(255) DEFAULT NULL,
                                     PRIMARY KEY (`id`)
                                   ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
@@ -96,12 +90,11 @@ Class extension_Stripe_Payments extends Extension {
 	}
 
 	public function uninstall() {
-//        # Remove tables
-//        Symphony::Database()->query("DROP TABLE `tbl_stripepayments_logs`");
-//
-//        # Remove preferences
-//        Symphony::Configuration()->remove('stripe-payments');
-//        Administration::instance()->saveConfig();
+		# Remove tables
+		Symphony::Database()->query("DROP TABLE `tbl_stripepayments_logs`");
+
+		# Remove preferences
+		Symphony::Configuration()->remove('stripe-payments');
 	}
 
 	public function save_preferences() {

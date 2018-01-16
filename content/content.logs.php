@@ -23,7 +23,6 @@ class contentExtensionStripe_paymentsLogs extends AdministrationPage {
 					foreach ($checked as $log_id) {
 						$state = Symphony::Database()->query("DELETE FROM `tbl_stripepayments_logs` WHERE `id` = {$log_id}");
 					}
-//					redirect(SYMPHONY_URL . '/extension/stripe_payments/logs/');
 					if ($state) {
 						$this->pageAlert("Entry(s) deleted successfully.");
 					} else {
@@ -72,27 +71,8 @@ class contentExtensionStripe_paymentsLogs extends AdministrationPage {
 				$col = array();
 				# Spit out $log_name vars
 				extract($log, EXTR_PREFIX_ALL, 'log');
-
-				# Get the entry/section data
-//				$entries = $entryManager->fetch($log_id, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE);
-//				$entry = $entries[0];
-//				echo "<pre>";
-//				var_dump($entry);
-//				echo "</pre>";
-//				die();
-//				if (isset($entry)) {
-//					$section_id = $entry->get('section_id');
-//					$section = $sectionManager->fetch($section_id);
-//					$column = array_shift($section->fetchFields());
-//					$data = $entry->getData($column->get('id'));
-//					# Build link to parent section
-//					$link = SYMPHONY_URL . '/publish/' . $section->get('handle') . '/edit/' . $entry->get('id') . '/';
-//
-//					# Date
-//					$col[] = Widget::TableData(Widget::Anchor(General::sanitize($log_invoice), $link));
-//				} else {
 				$col[] = Widget::TableData(General::sanitize($log_id));
-//				}
+
 				$col[0]->appendChild(Widget::Input("items[{$log_id}]", NULL, 'checkbox'));
 
 				if (!empty($log_transaction_id))
@@ -146,8 +126,6 @@ class contentExtensionStripe_paymentsLogs extends AdministrationPage {
 			array(null, false, __('With Selected...')),
 			array('delete', false, __('Delete'))
 		);
-
-//		$this->pageAlert("XXX");
 
 		$actions->appendChild(Widget::Apply($options));
 		$this->Form->appendChild($actions);
