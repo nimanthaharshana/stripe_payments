@@ -96,7 +96,7 @@ class contentExtensionStripe_paymentsLogs extends AdministrationPage {
 				$col[0]->appendChild(Widget::Input("items[{$log_id}]", NULL, 'checkbox'));
 
 				if (!empty($log_transaction_id))
-					$col[] = Widget::TableData(General::sanitize($log_transaction_id));
+					$col[] = Widget::TableData("<a href='https://dashboard.stripe.com/payments/{$log_transaction_id}'>" . $log_transaction_id . "</a>");
 				else
 					$col[] = Widget::TableData('None', 'inactive');
 
