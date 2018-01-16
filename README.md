@@ -30,17 +30,17 @@ Payment Status
 Inserting Data into Sections as New Records
 In order to add records as a new entry you need to follow the format given below
 
-<input type="hidden" name="sections[SECTION_ID_THAT_YOU_WISH_TO_ADD_NEW_RECORD][FIELD_HANDLE_OF_THE_SECTION]" value="VALUE_TO_ADD"/>
+&lt input type="hidden" name="sections[SECTION_ID_THAT_YOU_WISH_TO_ADD_NEW_RECORD][FIELD_HANDLE_OF_THE_SECTION]" value="VALUE_TO_ADD"/ &gt 
 In the above example, if you want to insert a value that returns from Stripe checkout instead of your custom value, you must add the correct parameter from the list of allowed parameters(Refer allowed parameters section).
 
 ###Reconciling Data
 To save any of the Stripe checkout data to a corresponding entry, you need to include the field in the following format.
 
-<input type="hidden" name="fields[SECTION_ID_OF_THE_ENTRY_TO_BE_UPDATED][ENTRY_ID_TO_BE_UPDATED][ENTRY_HANDLE]" value="VALUE_TO_BE_UPDATED"/>
+&lt input type="hidden" name="fields[SECTION_ID_OF_THE_ENTRY_TO_BE_UPDATED][ENTRY_ID_TO_BE_UPDATED][ENTRY_HANDLE]" value="VALUE_TO_BE_UPDATED"/ &gt 
 In the above example, if you want to update a value that returns from Stripe checkout instead of your custom value, you must add the correct parameter from the list of allowed parameters(Refer allowed parameters section).
 
 ###XML Output
-Data returned from Stripe checkout and corresponding messages are included as the <stripe-payments-response> node in the XML output for use in frontend pages.
+Data returned from Stripe checkout and corresponding messages are included as the &lt stripe-payments-response &gt  node in the XML output for use in frontend pages.
 
 List of Allowed Parameters
 transaction_id
@@ -52,18 +52,18 @@ paid
 Essentials
 Please note that the following parameters must be sent as hidden fields.
 
-<input type="hidden" name="stripe_payment" value="1"/> 
-<input type="hidden" name="actual_amount" value="1000"/> 
-<input type="hidden" name="currency" value="usd"/> 
-<input type="hidden" name="charge_description" value="Charge for Member Registration"/> 
+&lt input type="hidden" name="stripe_payment" value="1"/ &gt  
+&lt input type="hidden" name="actual_amount" value="1000"/ &gt  
+&lt input type="hidden" name="currency" value="usd"/ &gt  
+&lt input type="hidden" name="charge_description" value="Charge for Member Registration"/ &gt  
 Example Form
-<form action="{$current-url}/?debug" method="POST"> 
-<script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{params/stripe-publishable-key}" data-amount="1000" data-name="bliss.org" data-description="Donation" data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-locale="auto" data-panel-label="{{amount}}" data-currency="GBP" data-zip-code="true"> </script> 
+&lt form action="{$current-url}/?debug" method="POST" &gt  
+&lt script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{params/stripe-publishable-key}" data-amount="1000" data-name="bliss.org" data-description="Donation" data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-locale="auto" data-panel-label="{{amount}}" data-currency="GBP" data-zip-code="true" &gt  &lt /script &gt  
 
-<input type="hidden" name="stripe_payment" value="1"/> <!-- Required --> 
-<input type="hidden" name="actual_amount" value="1000"/> <!-- Required --> 
-<input type="hidden" name="currency" value="usd"/> <!-- Required --> 
-<input type="hidden" name="charge_description" value="Charge for Member Registration"/> <!-- Required --> 
-<input type="hidden" name="fields[7][8][paid-status]" value="status"/> <!-- Update Entry --> 
-<input type="hidden" name="sections[8][amount]" value="amount"/> <!-- New Entry --> 
-</form>
+&lt input type="hidden" name="stripe_payment" value="1"/ &gt  &lt !-- Required -- &gt  
+&lt input type="hidden" name="actual_amount" value="1000"/ &gt  &lt !-- Required -- &gt  
+&lt input type="hidden" name="currency" value="usd"/ &gt  &lt !-- Required -- &gt  
+&lt input type="hidden" name="charge_description" value="Charge for Member Registration"/ &gt  &lt !-- Required -- &gt  
+&lt input type="hidden" name="fields[7][8][paid-status]" value="status"/ &gt  &lt !-- Update Entry -- &gt  
+&lt input type="hidden" name="sections[8][amount]" value="amount"/ &gt  &lt !-- New Entry -- &gt  
+&lt /form &gt 
