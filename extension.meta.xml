@@ -5,8 +5,8 @@
 	<repo type="github">https://github.com/nimanthaharshana/stripe_payments</repo>
 	<url type="discuss">http://getsymphony.com/discuss/thread/32795/</url>
 	<types>
-		<type>Stripe</type>
-		<type>Payments</type>
+		<type>Event</type>
+		<type>Third Party Integration</type>
 	</types>
 	<authors>
 		<author>
