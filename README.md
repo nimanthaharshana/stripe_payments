@@ -14,20 +14,21 @@
 ### Overview
 This event is used to deal with data returned by Stripe’s Checkout via API and Reconciling/Adding of data to the sections. It does the following:
 
-Saves the transaction details to the log.
-Reconciles the data return by Stripe Checkout with matching fields with the given allowed parameters.
-Add/Update multiple entries across sections.
-Outputs data/status of payment as XML.
-For the event to work you’ll need to assign this event to the page where your stripe form action is set to and also you need to set stripe_payment hidden field in your form
+- Saves the transaction details to the log.
+- Reconciles the data return by Stripe Checkout with matching fields with the given allowed parameters.
+- Add/Update multiple entries across sections.
+- Outputs data/status of payment as XML.
+- For the event to work you’ll need to assign this event to the page where your stripe form action is set to and also you need to set stripe_payment hidden field in your form
 
 ### Transaction Logs
 The transaction logs store the following data:
 
-Customer Email
-Payment Date
-Amount Paid
-Payment Status
-Inserting Data into Sections as New Records
+- Customer Email
+- Payment Date
+- Amount Paid
+- Payment Status
+- Inserting Data into Sections as New Records
+
 In order to add records as a new entry you need to follow the format given below
 
 < input type="hidden" name="sections[SECTION_ID_THAT_YOU_WISH_TO_ADD_NEW_RECORD][FIELD_HANDLE_OF_THE_SECTION]" value="VALUE_TO_ADD"/ >
@@ -43,13 +44,14 @@ In the above example, if you want to update a value that returns from Stripe che
 Data returned from Stripe checkout and corresponding messages are included as the < stripe-payments-response > node in the XML output for use in frontend pages.
 
 List of Allowed Parameters
-transaction_id
-amount
-currency
-description
-status
-paid
-Essentials
+- transaction_id
+- amount
+- currency
+- description
+- status
+- paid
+- Essentials
+
 Please note that the following parameters must be sent as hidden fields.
 
 ```html
