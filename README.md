@@ -62,6 +62,10 @@ Please note that the following parameters must be sent as hidden fields.
 < input type="hidden" name="charge_description" value="Charge for Member Registration"/ > 
 ```
 
+### Setting up the Stripe keys
+
+Please set your Publishable key and the Secret key in System => Preferences
+
 ### Example Form
 ```html
 < form action="{$current-url}/?debug" method="POST" > 
