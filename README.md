@@ -18,7 +18,8 @@ This event is used to deal with data returned by Stripe’s Checkout via API and
 - Reconciles the data return by Stripe Checkout with matching fields with the given allowed parameters.
 - Add/Update multiple entries across sections.
 - Outputs data/status of payment as XML.
-- For the event to work you’ll need to assign this event to the page where your stripe form action is set to and also you need to set stripe_payment hidden field in your form
+
+For the event to work you’ll need to assign this event to the page where your stripe form action is set to and also you need to set stripe_payment hidden field in your form
 
 ### Transaction Logs
 The transaction logs store the following data:
