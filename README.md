@@ -57,7 +57,10 @@ Please note that the following parameters must be sent as hidden fields.
 < input type="hidden" name="actual_amount" value="1000"/ > 
 < input type="hidden" name="currency" value="usd"/ > 
 < input type="hidden" name="charge_description" value="Charge for Member Registration"/ > 
-Example Form
+```
+
+### Example Form
+```html
 < form action="{$current-url}/?debug" method="POST" > 
 < script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{params/stripe-publishable-key}" data-amount="1000" data-name="bliss.org" data-description="Donation" data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-locale="auto" data-panel-label="{{amount}}" data-currency="GBP" data-zip-code="true" > < /script > 
 
